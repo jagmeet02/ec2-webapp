@@ -13,9 +13,8 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
-          printf '%s' "$EC2_SSH_KEY" | tr -d ' \r\n' | base64 -d > ~/.ssh/amrit.pem
+          printf '%s\n' "$EC2_SSH_KEY" | tr -d '\r' > ~/.ssh/amrit.pem
           chmod 600 ~/.ssh/amrit.pem
-          ssh-keygen -y -f ~/.ssh/amrit.pem > /dev/null || { echo "EC2_SSH_KEY secret is not a valid private key"; exit 1; }
           ssh-keyscan -H "$EC2_HOST" >> ~/.ssh/known_hosts
 
           ssh -i ~/.ssh/amrit.pem "ec2-user@$EC2_HOST" 'bash -se' <<'EOF'
