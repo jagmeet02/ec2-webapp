@@ -13,17 +13,16 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
-          printf '%s\n' "$EC2_SSH_KEY" | tr -d '\r' > ~/.ssh/amrit.pem
-          chmod 600 ~/.ssh/amrit.pem
+          printf '%s\n' "$EC2_SSH_KEY" | tr -d '\r' > ~/.ssh/ec2.pem
+          chmod 600 ~/.ssh/ec2.pem
           ssh-keyscan -H "$EC2_HOST" >> ~/.ssh/known_hosts
 
-          ssh -i ~/.ssh/amrit.pem "ec2-user@$EC2_HOST" 'bash -se' <<'EOF'
+          ssh -i ~/.ssh/ec2.pem "ec2-user@$EC2_HOST" 'bash -se' <<'EOF'
           set -e
           command -v git >/dev/null || sudo yum install -y git
           APP="/home/ec2-user/ec2-webapp"
           if [ -d "$APP/.git" ]; then
             cd "$APP"
-            git checkout main
             git pull --ff-only origin main
           else
             git clone -b main "https://github.com/${{ github.repository }}.git" "$APP"
