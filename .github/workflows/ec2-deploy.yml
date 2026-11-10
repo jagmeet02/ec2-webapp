@@ -18,6 +18,8 @@ jobs:
           ssh-keyscan -H "$EC2_HOST" >> ~/.ssh/known_hosts
 
           ssh -i ~/.ssh/amrit.pem "ec2-user@$EC2_HOST" 'bash -se' <<'EOF'
+          set -e
+          command -v git >/dev/null || sudo yum install -y git
           APP="/home/ec2-user/ec2-webapp"
           if [ -d "$APP/.git" ]; then
             cd "$APP"
